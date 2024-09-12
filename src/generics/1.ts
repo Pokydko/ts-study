@@ -3,7 +3,7 @@
 
 import axios from "axios";
 
-async function fetchData(url: string): Promise<Object> | never {
+async function fetchData<Object>(url: string) {
   try {
     const response = await axios.get(url);
     return response.data;
