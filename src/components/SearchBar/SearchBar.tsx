@@ -1,11 +1,12 @@
 import css from "./SearchBar.module.css";
 import toast, { Toaster } from "react-hot-toast";
 import { RxMagnifyingGlass } from "react-icons/rx";
+import { ITextInVoidFunc } from "../../App.types";
 
-const SearchBar = ({ onSearch }) => {
-  const handleSubmit = (e) => {
+const SearchBar = ({ onSearch }: ITextInVoidFunc) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (e.target.userInput.value.trim() === "") {
+    if (e.currentTarget.userInput.value.trim() === "") {
       toast.custom(
         <span className={css.toast}>
           ☝️search field shouldn&apos;t be empty
@@ -13,7 +14,7 @@ const SearchBar = ({ onSearch }) => {
       );
       return;
     }
-    onSearch(e.target.userInput.value);
+    onSearch && onSearch(e.currentTarget.userInput.value);
   };
   return (
     <header>

@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import RingLoader from "react-spinners/RingLoader";
 import css from "./App.module.css";
 import unsplashApi from "./unsplash-my-api";
+import { IPhoto, IPicture } from "./App.types";
 
 import SearchBar from "./components/SearchBar/SearchBar";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
@@ -11,34 +12,19 @@ import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import ImageModal from "./components/ImageModal/ImageModal";
 
 const App = () => {
-  const [photos, setPhotos] = useState([]);
+  const [photos, setPhotos] = useState<IPhoto[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [isThereMore, setIsThereMore] = useState(false);
   const [current_page, setCurrent_page] = useState(1);
-  const [userRequest, setUserRequest] = useState("");
+  const [userRequest, setUserRequest] = useState<string>("");
 
-  const [picture, setPicture] = useState({});
+  const [picture, setPicture] = useState<IPicture>({
+    href: "",
+    description: null,
+    name: "",
+  });
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
-  useEffect(() => {
-    const changeTheme = () => {
-      root.style.colorScheme =
-        root.style.colorScheme === "dark" ? "light" : "dark";
-      console.info("Change black/white theme (tap on Title)");
-    };
-    const root = document.querySelector(":root");
-    root
-      .querySelector(`.${css.colorSwitcherBtn}`)
-      .addEventListener("click", changeTheme);
-
-    return () => {
-      if (root.querySelector(`.${css.colorSwitcherBtn}`))
-        root
-          .querySelector(`.${css.colorSwitcherBtn}`)
-          .removeEventListener("click", changeTheme);
-    };
-  }, []);
 
   useEffect(() => {
     if (userRequest === "") return;
@@ -51,10 +37,10 @@ const App = () => {
       searchPage: current_page,
       perPage: 30,
     })
-      .then(({ data }) => {
-        setPhotos(photos.concat(data.results));
-        checkEmptyReply(data.results);
-        if (data.total_pages > current_page) setIsThereMore(true);
+      .then(({ results, total_pages }) => {
+        setPhotos(photos.concat(results));
+        checkEmptyReply(results);
+        if (total_pages > current_page) setIsThereMore(true);
         else
           toast.custom(
             <span className={`${css.toast} ${css.toastEnd}`}>
@@ -72,7 +58,7 @@ const App = () => {
       });
   }, [userRequest, current_page]);
 
-  const onSearch = (userRequest) => {
+  const onSearch = (userRequest: string) => {
     setUserRequest(userRequest);
     setCurrent_page(1);
     setPhotos([]);
@@ -82,8 +68,8 @@ const App = () => {
     setCurrent_page(current_page + 1);
   };
 
-  const viewInModal = (e) => {
-    setPicture(e);
+  const viewInModal = (elem: IPicture): void => {
+    setPicture(elem);
     setModalIsOpen(true);
   };
 
@@ -96,11 +82,13 @@ const App = () => {
       )}
       {error && (
         <ErrorMessage>
-          Something went wrong.{" "}
-          <a className={css.link} href="/">
-            Reload the page
-          </a>
-          , please.
+          <div>
+            Something went wrong.{" "}
+            <a className={css.link} href="/">
+              Reload the page
+            </a>
+            , please.
+          </div>
         </ErrorMessage>
       )}
       {isThereMore && <LoadMoreBtn onLoadMore={onLoadMore} />}
@@ -121,7 +109,7 @@ const App = () => {
 };
 export default App;
 
-function checkEmptyReply(arr) {
+function checkEmptyReply(arr: IPhoto[]) {
   if (arr.length === 0)
     toast.custom(
       <span className={css.toast}>

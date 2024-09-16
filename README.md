@@ -1,3 +1,3 @@
-# GoIT, TS (with React + Vite):
+# GoIT. TS (with React + Vite):
 
 Image finder+ (Пошук зображень)

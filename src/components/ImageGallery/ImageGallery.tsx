@@ -1,6 +1,8 @@
 import css from "./ImageGallery.module.css";
 import ImageCard from "../ImageCard/ImageCard";
-const ImageGallery = ({ photos, viewInModal }) => {
+import { IGalleryProps } from "../../App.types";
+
+const ImageGallery = ({ photos, viewInModal }: IGalleryProps) => {
   return (
     <ul className={css.gallery}>
       {photos.map((photo) => (

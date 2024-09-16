@@ -1,7 +1,12 @@
+import { IModalProps } from "../../App.types";
 import css from "./ImageModal.module.css";
 import Modal from "react-modal";
 
-const ImageModal = ({ isOpen, onClose, children: { href, description } }) => {
+const ImageModal = ({
+  isOpen,
+  onClose,
+  children: { href, description, name },
+}: IModalProps) => {
   return (
     <Modal
       isOpen={isOpen}
@@ -12,7 +17,11 @@ const ImageModal = ({ isOpen, onClose, children: { href, description } }) => {
       onRequestClose={() => onClose()}
     >
       <div className="pictureWrapper">
-        <img src={href} alt={description} className={css.picture} />
+        <img
+          src={href}
+          alt={description || `Author: ${name}`}
+          className={css.picture}
+        />
 
         <span className={css.aboutPicture}>{description}</span>
       </div>

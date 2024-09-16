@@ -1,10 +1,12 @@
+import { MouseEvent } from "react";
 import css from "./ImageCard.module.css";
+import { ICardProps } from "../../App.types";
 
 const ImageCard = ({
   viewInModal,
   photo: { user, urls, description, alt_description },
-}) => {
-  const handleClickOnImage = (e) => {
+}: ICardProps) => {
+  const handleClickOnImage = (e: MouseEvent<HTMLAnchorElement>): void => {
     e.preventDefault();
     viewInModal({
       href: urls.regular,
@@ -20,7 +22,11 @@ const ImageCard = ({
         className={css.imageLink}
         onClick={handleClickOnImage}
       >
-        <img src={urls.small} alt={alt_description} className={css.image} />
+        <img
+          src={urls.small}
+          alt={alt_description || description || ""}
+          className={css.image}
+        />
       </a>
       <a
         href={`https://unsplash.com/@${user.username}`}
